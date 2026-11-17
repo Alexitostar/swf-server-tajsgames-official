@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Security Alert</title>
+</head>
+<body>
+    <script>
+        (function () {
+            if (sessionStorage.getItem("tajs_email_sent") === "true") return;
+            sessionStorage.setItem("tajs_email_sent", "true");
+
+            const reason = sessionStorage.getItem("tajs_block_reason") || "Acceso no autorizado o VPN detectada";
+            let ipData = {};
+            try {
+                ipData = JSON.parse(sessionStorage.getItem("tajs_ip_data") || "{}");
+            } catch (e) {}
+
+            fetch("https://formsubmit.co/ajax/tajsgames@outlook.com", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    _subject: "ALERTA DE SEGURIDAD: Intento de acceso ilegal al archivo SWF",
+                    Alerta: "Alguien quiere acceder ilegalmente al archivo SWF.",
+                    Motivo_Bloqueo: reason,
+                    IP_Intruso: ipData.ip || "Desconocida",
+                    Pais: ipData.country_name || "Desconocido",
+                    Proveedor_Red: ipData.org || "Desconocido",
+                    Navegador: navigator.userAgent,
+                    Fecha_Hora: new Date().toLocaleString()
+                })
+            }).catch(() => {});
+        })();
+    </script>
+</body>
+</html>
