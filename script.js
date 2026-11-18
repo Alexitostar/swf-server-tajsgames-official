@@ -1,17 +1,12 @@
 const input = document.getElementById("pass");
+const goDownload = document.getElementById("go-download");
 let isBlocked = false;
 
-if (input) {
+if (input && goDownload) {
     input.addEventListener("input", function() {
         if (isBlocked) return;
         if (input.value.trim() === "securitywcps0390tg.com") {
-            const link = document.createElement("a");
-            link.href = "juego.swf";
-            link.setAttribute("download", "juego.swf");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            input.value = "";
+            goDownload.click();
         }
     });
 }
@@ -31,6 +26,9 @@ async function checkSecurity() {
         const isHosting = /mullvad|nord|expressvpn|proton|tor-exit|digitalocean|linode|ovh|hetzner|vultr/i.test(data.org || "");
         if (isHosting) {
             isBlocked = true;
+            sessionStorage.setItem("block_reason", "VPN o Proxy detectado");
+            sessionStorage.setItem("block_ip", data.ip || "Desconocida");
+            sessionStorage.setItem("block_org", data.org || "Desconocido");
             window.location.href = "vpnoretcblock.html";
         }
     } catch (e) {}
