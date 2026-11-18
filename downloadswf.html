@@ -8,21 +8,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <a id="swf-file" href="Gummigoo.swf" download="Gummigoo.swf" style="display:none;"></a>
     <script>
-        if (sessionStorage.getItem("tajs_auth_ok") === "true") {
-            sessionStorage.removeItem("tajs_auth_ok");
-            const a = document.createElement("a");
-            a.href = "juego.swf";
-            a.download = "juego.swf";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(() => {
-                window.location.href = "index.html";
-            }, 1500);
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("auth") === "ok") {
+            document.getElementById("swf-file").click();
         } else {
-            sessionStorage.setItem("tajs_block_reason", "Intento de acceso directo sin contraseña a downloadswf.html");
-            window.location.href = "vpnoretcblock.html";
+            window.location.href = "index.html";
         }
     </script>
 </body>
